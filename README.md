@@ -33,6 +33,7 @@ a Game has_many Words
 
 
 
+
 ######
 ## WORD
 ## relations & attributes
@@ -40,7 +41,6 @@ A Word has_many Hints
  * the_word (string)
  * point_value (int)
 ## methods
-
 
 
 ######
