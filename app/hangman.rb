@@ -14,19 +14,25 @@ class Hangman
     end
 
     def run
-      top_menu
+      the_player = top_menu
+      while the_player != "exit app"
+        while the_player != nil 
+          the_player = logged_in_menu(the_player)
+        end
+        the_player = top_menu
+      end
       puts "Thanks for playing!"
     end
 
     def top_menu
-      continue = true
-      while continue
-        prompt.select("Welcome to hangman") do |menu|
-          menu.choice "log in" , -> {log_in}
-          menu.choice "sign up", -> {sign_up}
-          menu.choice "view leaderboard", -> {puts Game.leader_board}
-          menu.choice "exit", -> {continue=false}
-        end
+      prompt.select("Welcome to hangman") do |menu|
+        menu.choice "log in" , -> {return log_in}
+        menu.choice "sign up", -> {return sign_up}
+        menu.choice "view leaderboard", -> {
+          puts Game.leader_board
+          return nil
+        }
+        menu.choice "exit", -> {return "exit app"}
       end
     end
 
@@ -35,21 +41,19 @@ class Hangman
       if player.open_game?
         prompt.yes?("Continue last game?") ###
       end
-      continue=true
-      while (continue)
-        prompt.select("MENU:") do |menu|
-          menu.choice "Instructions and Rules", -> {instructions_and_rules}
-          menu.choice "View your past scores", -> {puts player.view_all_scores} #what to do when no scores
-          menu.choice "View your top score", -> {puts player.top_score} # ditto
-          menu.choice "View leader board", -> {puts Game.leader_board}
-          menu.choice "Start new game", -> {run_game(player)}
-          menu.choice "Delete a score", -> {delete_a_score(player)}
-          menu.choice "Delete all scores", -> {delete_all_scores(player)}
-          menu.choice "Update Username", -> {update_username(player)}
-          menu.choice "View number of games played", -> {puts player.num_games_played}
-          menu.choice "Log out", -> {continue=false}
-        end
+      prompt.select("MENU:") do |menu|
+        menu.choice "Instructions and Rules", -> {instructions_and_rules}
+        menu.choice "View your past scores", -> {puts player.view_all_scores} #what to do when no scores
+        menu.choice "View your top score", -> {puts player.top_score} # ditto
+        menu.choice "View leader board", -> {puts Game.leader_board}
+        menu.choice "Start new game", -> {run_game(player)}
+        menu.choice "Delete a score", -> {delete_a_score(player)}
+        menu.choice "Delete all scores", -> {delete_all_scores(player)}
+        menu.choice "Update Username", -> {update_username(player)}
+        menu.choice "View number of games played", -> {puts player.num_games_played}
+        menu.choice "Log out", -> {return ""}
       end
+      return player
     end
 
     def log_in
