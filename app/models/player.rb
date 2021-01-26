@@ -23,6 +23,7 @@ class Player<ActiveRecord::Base
         self.games.each do |game|
             str += "#{game.get_score}\n"
         end
+        str
     end
 
     def open_game?

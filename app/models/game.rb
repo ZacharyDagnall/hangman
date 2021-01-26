@@ -4,6 +4,9 @@ class Game<ActiveRecord::Base
     has_many :words, through: :game_words
 
     after_initialize :set_initial_values
+    attr_accessor :wrong_guesses, :word_so_far, :guessed_letters
+
+    @@MAX_WRONGS = 10
 
     def get_score   #for now assuming no hints 
         if self.words.length==0
@@ -20,6 +23,7 @@ class Game<ActiveRecord::Base
         self.words << retrieve_word
         @word_so_far = Game.concealed_word(self.words.last.the_word)
         @guessed_letters = ""
+        @wrong_guesses = 0
     end
 
     def retrieve_word       
@@ -48,7 +52,7 @@ class Game<ActiveRecord::Base
     end
 
     def make_guess(guess)
-        current_word = self.words.last
+        current_word = self.words.last.the_word
         if guess.length==1
             if already_guessed_letter?(guess)
                 return "You've already guessed this letter!"
@@ -81,12 +85,16 @@ class Game<ActiveRecord::Base
     end
 
     def already_guessed_letter?(guess)
-        if guessed_letters.include?(guess)
+        if self.guessed_letters.include?(guess)
             true
         else
-            guessed_letters+=guess
+            self.guessed_letters+=guess
             false
         end
+    end
+
+    def guesses_remaining
+        @@MAX_WRONGS-self.wrong_guesses
     end
 
     def die 
@@ -105,11 +113,18 @@ class Game<ActiveRecord::Base
         str
     end 
 
+    def print_concealed_word
+       puts word_so_far.split('').join(" ")
+    end
+
+    def return_revealed_word
+        self.words.last.the_word
+    end
+
     private
 
     def set_initial_values
         self.complete = false
-        self.wrong_guesses = 0
     end
 
 end
