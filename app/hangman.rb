@@ -91,7 +91,9 @@ class Hangman
       score = prompt.ask("What score do you want to delete?").to_f
       sure = prompt.yes?("Are you 💯 ???")
       if sure
-        player.delete_score(score)
+        if !player.delete_score(score)
+          puts "There was no such score found."
+        end
       end
     end
 
@@ -126,6 +128,7 @@ class Hangman
       guess = ""
       while !Hangman.reserved_words.include?(guess)
         if game.guesses_remaining==0
+          game.die
           puts "You are D E A D."
           puts "The word was: #{game.return_revealed_word}"
           return false #you dead
@@ -136,6 +139,7 @@ class Hangman
         guess = prompt.ask("What is your guess?")
         result = game.make_guess(guess)
         if game.guesses_remaining==0
+          game.die
           puts "You are D E A D."
           puts "The word was: #{game.return_revealed_word}"
           return false #you dead

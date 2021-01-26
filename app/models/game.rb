@@ -98,7 +98,7 @@ class Game<ActiveRecord::Base
     end
 
     def die 
-        self.words.pop 
+        Word.destroy(self.words.last.id)
         self.complete = true
     end
 

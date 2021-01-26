@@ -7,7 +7,13 @@ class Player<ActiveRecord::Base
     end
 
     def delete_score(score)
-        self.games.find{|game| game.get_score==score}.destroy
+        goodbye_game = self.games.find{|game| game.get_score==score}
+        if !goodbye_game
+            return false
+        else
+            Game.destroy(goodbye_game.id)
+            return true
+        end
     end
 
     def delete_all_scores
