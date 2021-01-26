@@ -5,11 +5,11 @@ Word.destroy_all
 GameWord.destroy_all
 Hint.destroy_all
 
-# Player.reset_pk_sequence
-# Word.reset_pk_sequence
-# GameWord.reset_pk_sequence
-# Hint.reset_pk_sequence
-# Game.reset_pk_sequence
+Player.reset_pk_sequence
+Word.reset_pk_sequence
+GameWord.reset_pk_sequence
+Hint.reset_pk_sequence
+Game.reset_pk_sequence
 
 #	pick easy word
 Word.create(the_word: "spot",point_value: 1);

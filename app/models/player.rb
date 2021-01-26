@@ -1,9 +1,6 @@
 class Player<ActiveRecord::Base
     has_many :games
 
-
-
-    
     def top_score
         score = self.games.max_by{|game| game.get_score}.get_score
         "Your highest score was #{score}"
@@ -21,11 +18,15 @@ class Player<ActiveRecord::Base
         self.games.size
     end
 
-    def list_all_scores
+    def view_all_scores
         str = ""
         self.games.each do |game|
             str += "#{game.get_score}\n"
         end
+    end
+
+    def open_game?
+        self.games.any?{|game| game.complete=false}
     end
 
 end

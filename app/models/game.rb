@@ -6,6 +6,9 @@ class Game<ActiveRecord::Base
     after_initialize :set_initial_values
 
     def get_score   #for now assuming no hints 
+        if self.words.length==0
+            return 0
+        end
         if !self.complete
             self.words.sum{|word| word.point_value} - self.words.last.point_value
         else 
@@ -15,7 +18,8 @@ class Game<ActiveRecord::Base
 
     def get_word
         self.words << retrieve_word
-        self.word_so_far = Game.concealed_word(self.words.last.the_word)
+        @word_so_far = Game.concealed_word(self.words.last.the_word)
+        @guessed_letters = ""
     end
 
     def retrieve_word       
@@ -39,14 +43,24 @@ class Game<ActiveRecord::Base
         return concealed_word_str
     end
 
+    def word_is_finished?
+       !self.word_so_far.include?("_")
+    end
+
     def make_guess(guess)
         current_word = self.words.last
         if guess.length==1
+            if already_guessed_letter?(guess)
+                return "You've already guessed this letter!"
+            end
             if current_word.include?(guess)
                 current_word.length.times do |i|
                     if current_word[i] == guess
                         self.word_so_far[i] = guess
                     end
+                end
+                if word_is_finished?
+                    return "You guessed the word!!"
                 end
                 return true
             else 
@@ -66,6 +80,15 @@ class Game<ActiveRecord::Base
         end
     end
 
+    def already_guessed_letter?(guess)
+        if guessed_letters.include?(guess)
+            true
+        else
+            guessed_letters+=guess
+            false
+        end
+    end
+
     def die 
         self.words.pop 
         self.complete = true
@@ -73,8 +96,8 @@ class Game<ActiveRecord::Base
 
     def self.leader_board
         str = ""
-        toppers = self.all.max_by(10){|game| game.get_score|}
-        counter = 0
+        toppers = self.all.max_by(10){|game| game.get_score}
+        counter = 1
         toppers.each do |topper|
             str += "#{counter}. #{topper.player.username}: #{topper.get_score} \n"
             counter += 1
