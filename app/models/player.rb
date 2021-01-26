@@ -11,9 +11,9 @@ class Player<ActiveRecord::Base
         if !goodbye_game
             return false
         else
-            Game.destroy(goodbye_game.id)
-            return true
+            Game.destroy(goodbye_game.id) ##so this will return a "truthy" value i believe
         end
+
     end
 
     def delete_all_scores
