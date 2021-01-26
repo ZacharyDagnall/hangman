@@ -13,6 +13,7 @@ class Hangman
       @@reserved_words
     end
 
+    ## testing change
     def run
       the_player = top_menu
       while the_player != "exit app"
