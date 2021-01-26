@@ -130,18 +130,20 @@ class Hangman
         if game.guesses_remaining==0
           game.die
           puts "You are D E A D."
-          puts "The word was: #{game.return_revealed_word.the_word}"
+          puts HangmanPictures.return_pic(-1)
+          puts "The word was: #{game.return_revealed_word.the_word} \n\n"
           return false
         end
+        puts HangmanPictures.return_pic(game.wrong_guesses)
         game.print_concealed_word
         puts "You have #{game.guesses_remaining} guesses remaining."
-        #print hangman doodle
         guess = prompt.ask("What is your guess?")
         result = game.make_guess(guess)
         if game.guesses_remaining==0
           game.die
           puts "You are D E A D."
-          puts "The word was: #{game.return_revealed_word.the_word}"
+          puts HangmanPictures.return_pic(-1)
+          puts "The word was: #{game.return_revealed_word.the_word} \n\n"
           return false
         end
         if result == "You've already guessed this letter!"
