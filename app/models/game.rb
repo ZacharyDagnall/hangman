@@ -53,6 +53,9 @@ class Game<ActiveRecord::Base
     end
 
     def make_guess(guess)
+        if !guess #nothing was actually entered
+            return
+        end
         current_word = self.words.last.the_word
         if guess.length==1
             if already_guessed_letter?(guess)

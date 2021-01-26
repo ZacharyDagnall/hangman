@@ -1,5 +1,346 @@
 class HangmanPictures
-    @@pics_arr= ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven"]
+    @@pics_arr= [
+        "                                                                      
+                                                                      
+        Ndyyyyyyyyyyyyyyyyyyyyyyymy                             
+        M/                       hy                             
+        M/                       +/                             
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+..........-Mo............                                          
+/ooooooooooooooooooooooo/                                          
+\n",
+"                                                                      
+                                                                      
+        Ndyyyyyyyyyyyyyyyyyyyyyyymy                             
+        M/                       hy                             
+        M/                     ..oo..                           
+        M/                   -.      .-                         
+        M/                  :          :                        
+        M/                  :          -`                       
+        M/                  :          :                        
+        M/                   -.      .-                         
+        M/                     ......                           
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+..........-Mo............                                          
+/ooooooooooooooooooooooo/                                          
+\n", 
+"                                                                      
+                                                                      
+        Ndyyyyyyyyyyyyyyyyyyyyyyymy                             
+        M/                       hy                             
+        M/                     ..oo..                           
+        M/                   -.      .-                         
+        M/                  :          :                        
+        M/                  :          -`                       
+        M/                  :          :                        
+        M/                   -.      .-                         
+        M/                     ..--..                           
+        M/                       -.                             
+        M/                       -.                             
+        M/                       -.                             
+        M/                       -.                             
+        M/                       -.                             
+        M/                       -.                             
+        M/                       -.                             
+        M/                       ..                             
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+..........-Mo............                                          
+/ooooooooooooooooooooooo/                                          
+\n", 
+"                                                                      
+                                                                      
+        Ndyyyyyyyyyyyyyyyyyyyyyyymy                             
+        M/                       hy                             
+        M/                     ..oo..                           
+        M/                   -.      .-                         
+        M/                  :          :                        
+        M/                  :          -`                       
+        M/                  :          :                        
+        M/                   -.      .-                         
+        M/                     ..--..                           
+        M/                       -.   ..                        
+        M/                       -.  :.                         
+        M/                       -.`/`                          
+        M/                       -/:                            
+        M/                       -:                             
+        M/                       -.                             
+        M/                       -.                             
+        M/                       ..                             
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+..........-Mo............                                          
+/ooooooooooooooooooooooo/                                          
+\n",
+"                                                                      
+                                                                      
+        Ndyyyyyyyyyyyyyyyyyyyyyyymy                             
+        M/                       hy                             
+        M/                     ..oo..                           
+        M/                   -.      .-                         
+        M/                  :          :                        
+        M/                  :          -`                       
+        M/                  :          :                        
+        M/                   -.      .-                         
+        M/                     ..--..                           
+        M/                  ``   -.   ..                        
+        M/                   --  -.  :.                         
+        M/                    `: -.`/`                          
+        M/                      ::/:                            
+        M/                       ::                             
+        M/                       -.                             
+        M/                       -.                             
+        M/                       ..                             
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+..........-Mo............                                          
+/ooooooooooooooooooooooo/                                          
+\n", 
+"                                                                      
+                                                                      
+        Ndyyyyyyyyyyyyyyyyyyyyyyymy                             
+        M/                       hy                             
+        M/                     ..oo..                           
+        M/                   -.      .-                         
+        M/                  :          :                        
+        M/                  :          -`                       
+        M/                  :          :                        
+        M/                   -.      .-                         
+        M/                     ..--..                           
+        M/                  ``   -.   ..                        
+        M/                   --  -.  :.                         
+        M/                    `: -.`/`                          
+        M/                      ::/:                            
+        M/                       ::                             
+        M/                       -.                             
+        M/                       -.                             
+        M/                       :.                             
+        M/                      :.                              
+        M/                    .:                                
+        M/                   --                                 
+        M/                  :`                                  
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+..........-Mo............                                          
+/ooooooooooooooooooooooo/                                          
+\n", 
+"                                                                      
+                                                                      
+        Ndyyyyyyyyyyyyyyyyyyyyyyymy                             
+        M/                       hy                             
+        M/                     ..oo..                           
+        M/                   -.      .-                         
+        M/                  :          :                        
+        M/                  :          -`                       
+        M/                  :          :                        
+        M/                   -.      .-                         
+        M/                     ..--..                           
+        M/                  ``   -.   ..                        
+        M/                   --  -.  :.                         
+        M/                    `: -.`/`                          
+        M/                      ::/:                            
+        M/                       ::                             
+        M/                       -.                             
+        M/                       -.                             
+        M/                       :-                             
+        M/                      :-:.                            
+        M/                    .:   .:                           
+        M/                   --     `:`                         
+        M/                  :`        -.                        
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+..........-Mo............                                          
+/ooooooooooooooooooooooo/                                          
+\n",
+"                                                                      
+                                                                      
+        Ndyyyyyyyyyyyyyyyyyyyyyyymy                             
+        M/                       hy                             
+        M/                     ..oo..                           
+        M/                   -.      .-                         
+        M/                  :  O. O.   :                        
+        M/                  :          -`                       
+        M/                  :          :                        
+        M/                   -.      .-                         
+        M/                     ..--..                           
+        M/                  ``   -.   ..                        
+        M/                   --  -.  :.                         
+        M/                    `: -.`/`                          
+        M/                      ::/:                            
+        M/                       ::                             
+        M/                       -.                             
+        M/                       -.                             
+        M/                       :-                             
+        M/                      :-:.                            
+        M/                    .:   .:                           
+        M/                   --     `:`                         
+        M/                  :`        -.                        
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+..........-Mo............                                          
+/ooooooooooooooooooooooo/                                          
+\n", 
+"                                                                      
+                                                                      
+        Ndyyyyyyyyyyyyyyyyyyyyyyymy                             
+        M/                       hy                             
+        M/                     ..oo..                           
+        M/                   : /   \\ `.                        
+        M/                  :  O   o   :                        
+        M/                  :          -`                       
+        M/                  :          :                        
+        M/                   -.      .-                         
+        M/                     ..--..                           
+        M/                  ``   -.   ..                        
+        M/                   --  -.  :.                         
+        M/                    `: -.`/`                          
+        M/                      ::/:                            
+        M/                       ::                             
+        M/                       -.                             
+        M/                       -.                             
+        M/                       :-                             
+        M/                      :-:.                            
+        M/                    .:   .:                           
+        M/                   --     `:`                         
+        M/                  :`        -.                        
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+..........-Mo............                                          
+/ooooooooooooooooooooooo/                                          
+\n", 
+"                                                                      
+                                                                      
+        Ndyyyyyyyyyyyyyyyyyyyyyyymy                             
+        M/                       hy                             
+        M/                     ..oo..                           
+        M/                   : /   \\ `.                        
+        M/                  :  O   o   :                        
+        M/                  :  _____   -`                       
+        M/                  : /     \\  :                        
+        M/                  -.        .-                         
+        M/                     ..--..                           
+        M/                  ``   -.   ..                        
+        M/                   --  -.  :.                         
+        M/                    `: -.`/`                          
+        M/                      ::/:                            
+        M/                       ::                             
+        M/                       -.                             
+        M/                       -.                             
+        M/                       :-                             
+        M/                      :-:.                            
+        M/                    .:   .:                           
+        M/                   --     `:`                         
+        M/                  :`        -.                        
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+..........-Mo............                                          
+/ooooooooooooooooooooooo/                                          
+\n", 
+"                                                                      
+                                                                      
+        Ndyyyyyyyyyyyyyyyyyyyyyyymy                             
+        M/                       hy                             
+        M/                     ..oo..                           
+        M/                   :       `.                        
+        M/                  :  X   X   :                        
+        M/                  :          -`                       
+        M/                  :  ______  :                        
+        M/                   -.    U  .-                         
+        M/                     ..--..                           
+        M/                  ``   -.   ..                        
+        M/                   --  -.  :.                         
+        M/                    `: -.`/`                          
+        M/                      ::/:                            
+        M/                       ::                             
+        M/                       -.                             
+        M/                       -.                             
+        M/                       :-                             
+        M/                      :-:.                            
+        M/                    .:   .:                           
+        M/                   --     `:`                         
+        M/                  :`        -.                        
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+..........-Mo............                                          
+/ooooooooooooooooooooooo/                                          
+\n"]
 
     def self.return_pic(index_num)
         @@pics_arr[index_num]
