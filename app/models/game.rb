@@ -4,19 +4,19 @@ class Game<ActiveRecord::Base
     has_many :words, through: :game_words
 
     after_initialize :set_initial_values
-    attr_accessor :wrong_guesses, :word_so_far, :guessed_letters
+    attr_accessor :wrong_guesses, :word_so_far, :guessed_letters, :complete
 
     @@MAX_WRONGS = 10
 
     def get_score   #for now assuming no hints 
         if self.words.length==0
-            return 0
+            return 0.0
         end
-        if !self.complete
+        #if !self.complete
             self.words.sum{|word| word.point_value} - self.words.last.point_value
-        else 
-            self.words.sum{|word| word.point_value}
-        end
+        #else 
+        #    self.words.sum{|word| word.point_value}
+        #end
     end
 
     def get_word
@@ -24,6 +24,7 @@ class Game<ActiveRecord::Base
         @word_so_far = Game.concealed_word(self.words.last.the_word)
         @guessed_letters = ""
         @wrong_guesses = 0
+        self.words.last
     end
 
     def retrieve_word       
@@ -110,7 +111,7 @@ class Game<ActiveRecord::Base
             str += "#{counter}. #{topper.player.username}: #{topper.get_score} \n"
             counter += 1
         end
-        str
+        str + "\n"
     end 
 
     def print_concealed_word
@@ -118,7 +119,7 @@ class Game<ActiveRecord::Base
     end
 
     def return_revealed_word
-        self.words.last.the_word
+        self.words.last
     end
 
     private

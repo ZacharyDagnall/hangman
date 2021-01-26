@@ -2,8 +2,11 @@ class Player<ActiveRecord::Base
     has_many :games
 
     def top_score
+        if self.games.size == 0
+            return "You have no saved scores"
+        end
         score = self.games.max_by{|game| game.get_score}.get_score
-        "Your highest score was #{score}"
+        "Your highest score is #{score} \n\n"
     end
 
     def delete_score(score)
@@ -25,11 +28,10 @@ class Player<ActiveRecord::Base
     end
 
     def view_all_scores
-        str = ""
-        self.games.each do |game|
-            str += "#{game.get_score}\n"
+        if self.games.size == 0
+           return "You have no saved scores\n"
         end
-        str
+        self.games.map{|game|game.get_score}.sort.reverse.join("\n") + "\n\n"
     end
 
     def open_game?

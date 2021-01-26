@@ -3,15 +3,11 @@ class Hangman
     # it is not an AR class so you need to add attr
   
     attr_reader :prompt
-    @@reserved_words = ["pause", "exit"]
 
     def initialize
       @prompt = TTY::Prompt.new
     end
 
-    def self.reserved_words
-      @@reserved_words
-    end
 
     def run
       top_menu
@@ -22,13 +18,10 @@ class Hangman
       continue = true
       while continue
         prompt.select("Welcome to hangman") do |menu|
-          menu.choice "log in" , -> {return log_in}
-          menu.choice "sign up", -> {return sign_up}
-          menu.choice "view leaderboard", -> {
-            puts Game.leader_board
-            return nil
-          }
-          menu.choice "exit", -> {return "exit app"}
+          menu.choice "log in" , -> {log_in}
+          menu.choice "sign up", -> {sign_up}
+          menu.choice "view leaderboard", -> {puts Game.leader_board}
+          menu.choice "exit", -> {continue = false}
         end
       end
     end
@@ -36,15 +29,15 @@ class Hangman
     def logged_in_menu(player)
       puts "Welcome #{player.username}!"
       if player.open_game?
-        prompt.yes?("Continue last game?") ###
+        prompt.yes?("Continue last game?")
       end
       continue=true
       while (continue)
         player.reload
         prompt.select("MENU:") do |menu|
           menu.choice "Instructions and Rules", -> {instructions_and_rules}
-          menu.choice "View your past scores", -> {puts player.view_all_scores} #what to do when no scores
-          menu.choice "View your top score", -> {puts player.top_score} # ditto
+          menu.choice "View your past scores", -> {puts player.view_all_scores} 
+          menu.choice "View your top score", -> {puts player.top_score}
           menu.choice "View leader board", -> {puts Game.leader_board}
           menu.choice "Start new game", -> {run_game(player)}
           menu.choice "Delete a score", -> {delete_a_score(player)}
@@ -59,24 +52,26 @@ class Hangman
     def log_in
       usrnm = prompt.ask("What is your username?").capitalize
       player = Player.find_by(username: usrnm)
+      if usrnm == "Exit"
+        return 
+      end
       if !player && prompt.yes?("This username doesn't exist. Would you like to sign up?")
-        
         sign_up
-      else 
+      elsif player
         logged_in_menu(player)
       end
     end
 
     def sign_up
       usrnm = prompt.ask("What would you like your username to be?").capitalize
-      while (Player.find_by(username: usrnm) && usrnm != "exit")
+      while (Player.find_by(username: usrnm) && usrnm != "Exit")
         puts "This username is already taken!"
         usrnm = prompt.ask("What would you like your username to be?").capitalize
       end
-      if (usrnm != "exit")
+      if (usrnm != "Exit")
         player = Player.create(username: usrnm)
+        logged_in_menu(player)
       end
-      logged_in_menu(player)
     end
 
     def instructions_and_rules
@@ -84,7 +79,7 @@ class Hangman
         Welcome to Sam and Zak's Hangman game!! Thanks for....
           h a n g i n g  out !
           with us ;)
-        At any point in the game, if you type in "exit" or "pause", you will be taken out of the current menu/game.
+        At any point in the game, if you type in "exit", you will be taken out of the current menu/game.
       INSTRUCTIONS
       puts <<~RULES
         Here are the rules for the game:
@@ -102,7 +97,7 @@ class Hangman
     end
 
     def delete_all_scores(player)
-      sure = prompt.yes?("You sure you wanna delete all scores my guy???")
+      sure = prompt.yes?("You sure you wanna delete all of your scores my guy???")
       if sure
         player.delete_all_scores
       end
@@ -129,13 +124,14 @@ class Hangman
 
     def run_word(game)
       game.get_word
+      puts "This word is worth #{game.return_revealed_word.point_value} points."
       guess = ""
-      while !Hangman.reserved_words.include?(guess)
+      while guess != "exit" && guess != "Exit"
         if game.guesses_remaining==0
           game.die
           puts "You are D E A D."
-          puts "The word was: #{game.return_revealed_word}"
-          return false #you dead
+          puts "The word was: #{game.return_revealed_word.the_word}"
+          return false
         end
         game.print_concealed_word
         puts "You have #{game.guesses_remaining} guesses remaining."
@@ -145,13 +141,15 @@ class Hangman
         if game.guesses_remaining==0
           game.die
           puts "You are D E A D."
-          puts "The word was: #{game.return_revealed_word}"
-          return false #you dead
+          puts "The word was: #{game.return_revealed_word.the_word}"
+          return false
         end
         if result == "You've already guessed this letter!"
           puts result
         elsif result == "You guessed the word!!"
           puts result
+          puts "\"#{game.return_revealed_word.the_word}\" was worth #{game.return_revealed_word.point_value} points."
+          puts "Your current score for this game is #{game.get_score + game.return_revealed_word.point_value} \n" 
           return true
         elsif result
           puts "Correct! Keep going!"
