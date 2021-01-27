@@ -4,7 +4,7 @@ class Game<ActiveRecord::Base
     has_many :words, through: :game_words
 
     after_initialize :set_initial_values
-    attr_accessor :wrong_guesses, :word_so_far, :guessed_letters, :complete
+    attr_accessor :wrong_guesses, :word_so_far, :guessed_letters, :complete, :guessed_words
 
     @@MAX_WRONGS = 10
 
@@ -23,6 +23,7 @@ class Game<ActiveRecord::Base
         self.words << retrieve_word
         @word_so_far = Game.concealed_word(self.words.last.the_word)
         @guessed_letters = ""
+        @guessed_words = []
         @wrong_guesses = 0
         self.words.last
     end
@@ -59,7 +60,7 @@ class Game<ActiveRecord::Base
         current_word = self.words.last.the_word
         if guess.length==1
             if already_guessed_letter?(guess)
-                return "You've already guessed this letter!"
+                return "You've already guessed this letter!!"
             end
             if current_word.include?(guess)
                 current_word.length.times do |i|
@@ -75,7 +76,9 @@ class Game<ActiveRecord::Base
                 self.wrong_guesses +=1
                 return false
             end
-        elsif guess.length == current_word.length
+        elsif already_guessed_word?(guess)
+            return "You've already guessed this word!!"
+        elsif guess.length == current_word.length 
            if guess == current_word
                 return "You guessed the word!!"
            else
@@ -93,6 +96,15 @@ class Game<ActiveRecord::Base
             true
         else
             self.guessed_letters+=guess
+            false
+        end
+    end
+
+    def already_guessed_word?(guess)
+        if self.guessed_words.include?(guess)
+            true
+        else
+            self.guessed_words.push(guess)
             false
         end
     end

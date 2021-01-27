@@ -75,14 +75,22 @@ class Hangman
     end
 
     def instructions_and_rules
-      puts <<~INSTRUCTIONS
+      puts <<~WELCOME
         Welcome to Sam and Zak's Hangman game!! Thanks for....
           h a n g i n g  out !
           with us ;)
         At any point in the game, if you type in "exit", you will be taken out of the current menu/game.
-      INSTRUCTIONS
+      WELCOME
       puts <<~RULES
         Here are the rules for the game:
+        1. You will be provided with a random word in the form of underscores from our database of words with varying difficulty, some can be pretty tough! The amount of underscores matches the amount of letters in the word
+        2. You have 10 guess to complete the word, you can guess 1 letter at a time or guess an entire word
+        3. When you accumulate 10 incorrect guesses on any given word you lose and are dead! (oh nooo) Your wrong guesses reset upon receiving a new word
+        4. You will not be penalized for guessing the same letter or word twice; if you guess 'a' or 'dog' once and it is wrong you will not be penalized for guessing it again
+        5. If you correctly guess a letter the underscores will be updated to reflect the placement of that letter within your current word 
+        6. If you correctly guess the entire word, good job! You will be given a new word to complete
+        7. You will continually get new words as you get each correct until you die. Go for the high score!
+        8. If you are stuck on a word and want help type "hint" (the word will never be hint) and receive a hint to help you. Beware, hints will reduce your points earned for completing that word!  
       RULES
     end
 
@@ -124,7 +132,6 @@ class Hangman
 
     def run_word(game)
       game.get_word
-      puts "This word is worth #{game.return_revealed_word.point_value} points."
       guess = ""
       while guess != "exit" && guess != "Exit"
         if game.guesses_remaining==0
@@ -136,7 +143,8 @@ class Hangman
         end
         puts HangmanPictures.return_pic(game.wrong_guesses)
         game.print_concealed_word
-        puts "You have #{game.guesses_remaining} guesses remaining."
+        puts "This word is worth #{game.return_revealed_word.point_value} points."
+        puts "You have #{game.guesses_remaining} guesses remaining.\n\n"
         guess = prompt.ask("What is your guess?")
         result = game.make_guess(guess)
         if game.guesses_remaining==0
@@ -146,7 +154,7 @@ class Hangman
           puts "The word was: #{game.return_revealed_word.the_word} \n\n"
           return false
         end
-        if result == "You've already guessed this letter!"
+        if result == "You've already guessed this letter!!" || result == "You've already guessed this word!!"
           puts result
         elsif result == "You guessed the word!!"
           puts result
