@@ -145,15 +145,16 @@ class Hangman
       puts HangmanPictures.return_pic(game.wrong_guesses)
       while guess != "exit" && guess != "Exit"
         hint_taken = false
-        print_update(game, used_hints)
+        print_update(game, used_hints[:count])
         guess = prompt.ask("What is your guess?")
         if guess == "hint"
-          used_hints = call_for_hint(game, used_hints[:count])
+          used_hints = call_for_hint(game, used_hints)
           hint_taken = true
         end
-        if !hint_taken && guess.downcase != "exit"
+        if !hint_taken && guess && guess.downcase != "exit" # && guess != "Exit" && guess
           result = game.make_guess(guess)
-          print_appropriate_message_for_guess(game,result)
+          we_out = print_appropriate_message_for_guess(game,result,used_hints[:count])
+          return we_out if we_out.is_a?(TrueClass) || we_out.is_a?(FalseClass)
           puts HangmanPictures.return_pic(game.wrong_guesses)
         end
       end
@@ -193,14 +194,14 @@ class Hangman
       puts "You have gussed the following letters so far: #{game.guessed_letters.split("").sort.join(" ")}"
     end
 
-    def print_appropriate_message_for_guess(game,result)
+    def print_appropriate_message_for_guess(game,result,hints)
       if game.guesses_remaining==0
         return die(game)
       end
       if result == "You've already guessed this letter!!" || result == "You've already guessed this word!!"
         already_guessed(result)
       elsif result == "You guessed the word!!"
-        return you_guessed_it(result)
+        return you_guessed_it(game, result,hints)
       elsif result
         correct_letter_guess
       else
@@ -230,10 +231,10 @@ class Hangman
       puts result
     end
 
-    def you_guessed_it(result)
+    def you_guessed_it(game, result, hints)
       puts result
       pid = fork{ exec 'afplay', "./sounds/right_word_guess.mp3" }
-      puts "\"#{game.return_revealed_word.the_word}\" was worth #{game.return_revealed_word.point_value - (2 * used_hints[:count])} points."
+      puts "\"#{game.return_revealed_word.the_word}\" was worth #{game.return_revealed_word.point_value - (2 * hints)} points."
       puts "Your current score for this game is #{game.get_score + game.return_revealed_word.point_value} \n" 
       return true
     end
