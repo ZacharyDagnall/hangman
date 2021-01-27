@@ -1,10 +1,11 @@
 class Game<ActiveRecord::Base
+
     belongs_to :player
     has_many :game_words
     has_many :words, through: :game_words
 
     after_initialize :set_initial_values
-    attr_accessor :wrong_guesses, :word_so_far, :guessed_letters, :complete, :guessed_words
+    attr_accessor :wrong_guesses, :word_so_far, :guessed_letters, :complete, :guessed_words, :hints_used
 
     @@MAX_WRONGS = 10
 
@@ -13,7 +14,7 @@ class Game<ActiveRecord::Base
             return 0.0
         end
         #if !self.complete
-            self.words.sum{|word| word.point_value} - self.words.last.point_value
+            self.words.sum{|word| word.point_value} - self.words.last.point_value - (hints_used * 2)
         #else 
         #    self.words.sum{|word| word.point_value}
         #end
@@ -137,10 +138,74 @@ class Game<ActiveRecord::Base
         self.words.last
     end
 
+    ########HINT STUFF
+
+    def get_hint(hint_type)
+        self.hints_used += 1
+        case hint_type
+        when "vowels"
+            generate_vowels_hint
+        when "obscure"
+            generate_obscure_hint
+        when "repeating"
+            generate_repeating_hint
+        end 
+    end
+
     private
+
+    def generate_vowels_hint
+        the_word = self.words.last.the_word
+        vowels_arr = %w(a,e,i,o,u)
+        num = vowels_arr.sum{|letter| the_word.count(letter)}
+        "#{num} of these letters #{is_or_are(num)} #{plural_or_not(num, "vowel")}."
+    end
+
+    def generate_obscure_hint
+        the_word = self.words.last.the_word.split("").uniq
+        obscure_arr = %w(j, q, x, z)
+        found = the_word.any?{|letter| obscure_arr.include?(letter)}
+        if found 
+            "This word contains one or more of these obscure letters: 'J', 'Q', 'X' or 'Z'"
+        else
+            "This word does not contain any these obscure letters: 'J', 'Q', 'X' or 'Z'"
+        end
+    end
+
+    def generate_repeating_hint
+        the_word = self.words.last.the_word
+        arr_of_letters = the_word.split("").uniq
+        the_hash = {}
+        arr_of_letters.each do |letter|
+            the_hash[letter] = the_word.count(letter)
+        end
+        max_arr = the_hash.max_by{|key, val| val}
+        if max_arr[1] == 1
+            "This word has no repeating letters"
+        else
+            "This word has a letter that shows up #{max_arr[1]} times"
+        end
+    end
+
+    def plural_or_not(num, string)
+        the_string = string
+        if num  != 1
+            the_string = string + 's'
+        end
+        "#{the_string}"
+    end
+
+    def is_or_are(num)
+        if num == 1
+            "is a"
+        else
+            "are"
+        end
+    end
 
     def set_initial_values
         self.complete = false
+        @hints_used = 0.0
     end
 
 end

@@ -90,7 +90,8 @@ class Hangman
         5. If you correctly guess a letter the underscores will be updated to reflect the placement of that letter within your current word 
         6. If you correctly guess the entire word, good job! You will be given a new word to complete
         7. You will continually get new words as you get each correct until you die. Go for the high score!
-        8. If you are stuck on a word and want help type "hint" (the word will never be hint) and receive a hint to help you. Beware, hints will reduce your points earned for completing that word!  
+        8. If you are stuck on a word and want help type "hint" (the word will never be hint) and you will receive a hint to help you. 
+        9. Beware, each hint you use will reduce your points earned by 2. Use hints sparingly!
       RULES
     end
 
@@ -131,57 +132,79 @@ class Hangman
     end
 
     def run_word(game)
+      used_hints_arr_bools = [false, false, false]
       game.get_word
       guess = ""
+      puts HangmanPictures.return_pic(game.wrong_guesses)
       while guess != "exit" && guess != "Exit"
-        if game.guesses_remaining==0
-          game.die
-          puts "You are D E A D."
-          puts HangmanPictures.return_pic(-1)
-          puts "The word was: #{game.return_revealed_word.the_word} \n\n"
-          return false
-        end
-        puts HangmanPictures.return_pic(game.wrong_guesses)
+        hint_taken = false
         game.print_concealed_word
         puts "This word is worth #{game.return_revealed_word.point_value} points."
         puts "You have #{game.guesses_remaining} guesses remaining.\n\n"
+        puts "You have gussed the following letters so far: #{game.guessed_letters.split("").join(" ")}"
         guess = prompt.ask("What is your guess?")
-        result = game.make_guess(guess)
-        if game.guesses_remaining==0
-          game.die
-          puts "You are D E A D."
-          puts HangmanPictures.return_pic(-1)
-          puts "The word was: #{game.return_revealed_word.the_word} \n\n"
-          return false
+        if guess == "hint"
+          used_hints_arr_bools = call_for_hint(game, used_hints_arr_bools)
+          hint_taken = true
         end
-        if result == "You've already guessed this letter!!" || result == "You've already guessed this word!!"
-          puts result
-        elsif result == "You guessed the word!!"
-          puts result
-          puts "\"#{game.return_revealed_word.the_word}\" was worth #{game.return_revealed_word.point_value} points."
-          puts "Your current score for this game is #{game.get_score + game.return_revealed_word.point_value} \n" 
-          return true
-        elsif result
-          puts "Correct! Keep going!"
-        else
-          puts "Oof sorry, closer to death."
+        if !hint_taken
+          result = game.make_guess(guess)
+          if game.guesses_remaining==0
+            game.die
+            puts "You are D E A D."
+            puts HangmanPictures.return_pic(-1)
+            puts "The word was: #{game.return_revealed_word.the_word} \n\n"
+            prompt.ask("Press enter to continue")
+            return false
+          end
+          if result == "You've already guessed this letter!!" || result == "You've already guessed this word!!"
+            puts result
+          elsif result == "You guessed the word!!"
+            puts result
+            puts "\"#{game.return_revealed_word.the_word}\" was worth #{game.return_revealed_word.point_value} points."
+            puts "Your current score for this game is #{game.get_score + game.return_revealed_word.point_value} \n" 
+            return true
+          elsif result
+            puts "Correct! Keep going!"
+          else
+            puts "Oof sorry, closer to death."
+          end
+          puts HangmanPictures.return_pic(game.wrong_guesses)
         end
       end
     end
 
-    # * in-game
-    # *** print the word_so_far string, and accept guesses
-    # *** print guesses remaining
-    # *** print hangman doodle
-    # *** points available for guessing this word correct (and difficulty)
-    # *** points earned so far in this game
-    # *** reserved words: "pause" "exit"
-    # ******* if (guess word correctly) --> get new word, back to top
-    # ******** if (guess wrong) --> call "die" method, output score from this game, and print "die message"
-    # ****************** want to play again? 
-    # *********************** yes --> back to top of in-game
-    # *********************** no --> take back to logged-in menu
- 
+    def call_for_hint(game, used_hints_arr_bools)
+      prompt.select("HINT OPTIONS:") do |menu|
+        if !used_hints_arr_bools[0]
+          menu.choice "Get amount of vowels", -> {
+            puts game.get_hint("vowels")
+            used_hints_arr_bools[0] = true
+            used_hints_arr_bools
+          }
+        end
+        if !used_hints_arr_bools[1]
+          menu.choice "Check for obscure letters", -> {
+            puts game.get_hint("obscure")
+            used_hints_arr_bools[1] = true
+            used_hints_arr_bools
+          }
+        end
+        if !used_hints_arr_bools[2]
+          menu.choice "Check for repeating letters", -> {
+            puts game.get_hint("repeating")
+            used_hints_arr_bools[2] = true
+            used_hints_arr_bools
+          }
+        end
+        if used_hints_arr_bools.include?(false)
+          menu.choice "Nevermind, I don't need a hint!", -> {}
+        else
+          menu.choice "No more available hints!", -> {}
+        end
+      end
+    end
+
     private
   
     

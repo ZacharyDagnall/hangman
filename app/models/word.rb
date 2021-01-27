@@ -1,9 +1,4 @@
 class Word<ActiveRecord::Base
-    has_many :hints
+    belongs_to :hints
 
-
-
-    # def generate_hint
-
-    # end
 end
