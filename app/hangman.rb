@@ -77,8 +77,15 @@ class Hangman
     def instructions_and_rules
       puts <<~WELCOME
         Welcome to Sam and Zak's Hangman game!! Thanks for....
-          h a n g i n g  out !
-          with us ;)
+            _________
+            |        |
+            |        😉
+            |       \\|/ 
+            |        |  
+            |       / \\
+            |  h a n g i n g 
+         ___|___    out
+                  with us ;D
         At any point in the game, if you type in "exit", you will be taken out of the current menu/game.
       WELCOME
       puts <<~RULES
