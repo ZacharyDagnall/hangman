@@ -222,7 +222,7 @@ class Hangman
       pid = fork{ exec 'afplay', "./sounds/game_over.mp3" }
       puts HangmanPictures.return_pic(-1)
       puts "The word was: #{game.return_revealed_word.the_word} \n\n"
-      prompt.ask("Press enter to continue")
+      prompt.ask("Press enter to return to menu")
       return false
     end
 
@@ -234,8 +234,10 @@ class Hangman
     def you_guessed_it(game, result, hints)
       puts result
       pid = fork{ exec 'afplay', "./sounds/right_word_guess.mp3" }
+      puts HangmanPictures.return_pic(-2)
       puts "\"#{game.return_revealed_word.the_word}\" was worth #{game.return_revealed_word.point_value - (2 * hints)} points."
       puts "Your current score for this game is #{game.get_score + game.return_revealed_word.point_value} \n" 
+      prompt.ask("Press enter to go to the next word!")
       return true
     end
 

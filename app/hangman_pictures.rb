@@ -314,6 +314,37 @@ class HangmanPictures
                                                                       
         Ndyyyyyyyyyyyyyyyyyyyyyyymy                             
         M/                       hy                             
+        M/                                       
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                                                      
+        M/                     ..oo..                           
+        M/                   :       `.                        
+        M/                  :  @   @   :                        
+        M/                  :          -`                       
+        M/                  :  \\____/  :                        
+        M/                   -.       .-                         
+        M/                     ..--..                           
+        M/                  ``   -.   ..                        
+        M/                   --  -.  :.                         
+        M/                    `: -.`/`                          
+        M/                      ::/:                            
+        M/                       ::                             
+        M/                       -.                             
+        M/                       -.                             
+        M/                       :-                             
+        M/                      :-:.                            
+        M/                    .:   .:                           
+        M/                   --     `:`                         
+        M/                  :`        -.                              
+..........-Mo............                                          
+/ooooooooooooooooooooooo/                                          
+\n",
+"                                                                      
+                                                                      
+        Ndyyyyyyyyyyyyyyyyyyyyyyymy                             
+        M/                       hy                             
         M/                     ..oo..                           
         M/                   :       `.                        
         M/                  :  X   X   :                        
