@@ -139,80 +139,114 @@ class Hangman
     end
 
     def run_word(game)
-      used_hints_arr_bools = [false, false, false]
+      used_hints = {vowel:false, obscure:false, repeating:false, count:0}
       game.get_word
       guess = ""
       puts HangmanPictures.return_pic(game.wrong_guesses)
       while guess != "exit" && guess != "Exit"
         hint_taken = false
-        game.print_concealed_word
-        puts "This word is worth #{game.return_revealed_word.point_value} points."
-        puts "You have #{game.guesses_remaining} guesses remaining.\n\n"
-        puts "You have gussed the following letters so far: #{game.guessed_letters.split("").join(" ")}"
+        print_update(game, used_hints)
         guess = prompt.ask("What is your guess?")
         if guess == "hint"
-          used_hints_arr_bools = call_for_hint(game, used_hints_arr_bools)
+          used_hints = call_for_hint(game, used_hints[:count])
           hint_taken = true
         end
-        if !hint_taken
+        if !hint_taken && guess.downcase != "exit"
           result = game.make_guess(guess)
-          if game.guesses_remaining==0
-            game.die
-            puts "You are D E A D."
-            puts HangmanPictures.return_pic(-1)
-            puts "The word was: #{game.return_revealed_word.the_word} \n\n"
-            prompt.ask("Press enter to continue")
-            return false
-          end
-          if result == "You've already guessed this letter!!" || result == "You've already guessed this word!!"
-            puts result
-          elsif result == "You guessed the word!!"
-            puts result
-            puts "\"#{game.return_revealed_word.the_word}\" was worth #{game.return_revealed_word.point_value} points."
-            puts "Your current score for this game is #{game.get_score + game.return_revealed_word.point_value} \n" 
-            return true
-          elsif result
-            puts "Correct! Keep going!"
-          else
-            puts "Oof sorry, closer to death."
-          end
+          print_appropriate_message_for_guess(game,result)
           puts HangmanPictures.return_pic(game.wrong_guesses)
         end
       end
     end
+  
+    private
 
-    def call_for_hint(game, used_hints_arr_bools)
+    def call_for_hint(game, used_hints)   ##can we use an enumerable?
       prompt.select("HINT OPTIONS:") do |menu|
-        if !used_hints_arr_bools[0]
-          menu.choice "Get amount of vowels", -> {
-            puts game.get_hint("vowels")
-            used_hints_arr_bools[0] = true
-            used_hints_arr_bools
+        if !used_hints[:vowel]
+          menu.choice "Find out how many of these letters are vowels", -> {
+            return execute_hint(game, used_hints, :vowel)
           }
         end
-        if !used_hints_arr_bools[1]
+        if !used_hints[:obscure]
           menu.choice "Check for obscure letters", -> {
-            puts game.get_hint("obscure")
-            used_hints_arr_bools[1] = true
-            used_hints_arr_bools
+            return execute_hint(game, used_hints, :obscure)
           }
         end
-        if !used_hints_arr_bools[2]
+        if !used_hints[:repeating]
           menu.choice "Check for repeating letters", -> {
-            puts game.get_hint("repeating")
-            used_hints_arr_bools[2] = true
-            used_hints_arr_bools
+            return execute_hint(game, used_hints, :repeating)
           }
         end
-        if used_hints_arr_bools.include?(false)
-          menu.choice "Nevermind, I don't need a hint!", -> {}
+        if used_hints.all?{|hint_type,bool| bool}
+          menu.choice "No more available hints!", -> {return used_hints}
         else
-          menu.choice "No more available hints!", -> {}
+          menu.choice "Nevermind, I don't need a hint!", -> {return used_hints}
         end
       end
     end
 
-    private
+    def print_update(game,hints)
+      game.print_concealed_word
+      puts "This word is worth #{game.return_revealed_word.point_value - (2 * hints)} points."
+      puts "You have #{game.guesses_remaining} guesses remaining.\n\n"
+      puts "You have gussed the following letters so far: #{game.guessed_letters.split("").sort.join(" ")}"
+    end
+
+    def print_appropriate_message_for_guess(game,result)
+      if game.guesses_remaining==0
+        return die(game)
+      end
+      if result == "You've already guessed this letter!!" || result == "You've already guessed this word!!"
+        already_guessed(result)
+      elsif result == "You guessed the word!!"
+        return you_guessed_it(result)
+      elsif result
+        correct_letter_guess
+      else
+        wrong_letter_guess
+      end
+    end
+
+    def execute_hint(game, hash, symbol)
+      puts game.get_hint(symbol)
+      hash[symbol] = true
+      hash[:count] +=1
+      hash
+    end
+
+    def die(game)
+      game.die
+      puts "You are D E A D."
+      pid = fork{ exec 'afplay', "./sounds/game_over.mp3" }
+      puts HangmanPictures.return_pic(-1)
+      puts "The word was: #{game.return_revealed_word.the_word} \n\n"
+      prompt.ask("Press enter to continue")
+      return false
+    end
+
+    def already_guessed(result)
+      pid = fork{ exec 'afplay', "./sounds/huh.mp3" }
+      puts result
+    end
+
+    def you_guessed_it(result)
+      puts result
+      pid = fork{ exec 'afplay', "./sounds/right_word_guess.mp3" }
+      puts "\"#{game.return_revealed_word.the_word}\" was worth #{game.return_revealed_word.point_value - (2 * used_hints[:count])} points."
+      puts "Your current score for this game is #{game.get_score + game.return_revealed_word.point_value} \n" 
+      return true
+    end
+
+    def correct_letter_guess
+      pid = fork{ exec 'afplay', "./sounds/right_letter_guess.mp3" }
+      puts "Correct! Keep going!"
+    end
+
+    def wrong_letter_guess
+      pid = fork{ exec 'afplay', "./sounds/wrong_letter_guess.mp3" }
+      puts "Oof sorry, closer to death."
+    end
   
     
   end

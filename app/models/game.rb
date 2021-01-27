@@ -9,12 +9,12 @@ class Game<ActiveRecord::Base
 
     @@MAX_WRONGS = 10
 
-    def get_score   #for now assuming no hints 
+    def get_score    
         if self.words.length==0
-            return 0.0
+            return 0
         end
         #if !self.complete
-            self.words.sum{|word| word.point_value} - self.words.last.point_value - (hints_used * 2)
+        self.words.sum{|word| word.point_value} - (self.hints_used * 2)
         #else 
         #    self.words.sum{|word| word.point_value}
         #end
@@ -143,11 +143,11 @@ class Game<ActiveRecord::Base
     def get_hint(hint_type)
         self.hints_used += 1
         case hint_type
-        when "vowels"
+        when :vowel
             generate_vowels_hint
-        when "obscure"
+        when :obscure
             generate_obscure_hint
-        when "repeating"
+        when :repeating
             generate_repeating_hint
         end 
     end
