@@ -30,7 +30,7 @@ class Game<ActiveRecord::Base
     end
 
     def retrieve_word       
-        if Word.all.size == self.words.size
+        if Word.all.size == self.words.size    #guarding against a player playing every word in the database
             puts "Congrats, you're a freak!"
             return nil
         end 
@@ -60,37 +60,46 @@ class Game<ActiveRecord::Base
         end
         current_word = self.words.last.the_word
         if guess.length==1
-            if already_guessed_letter?(guess)
-                return "You've already guessed this letter!!"
-            end
-            if current_word.include?(guess)
-                current_word.length.times do |i|
-                    if current_word[i] == guess
-                        self.word_so_far[i] = guess
-                    end
-                end
-                if word_is_finished?
-                    return "You guessed the word!!"
-                end
-                return true
-            else 
-                self.wrong_guesses +=1
-                return false
-            end
+            return make_one_char_guess(current_word, guess)
         elsif already_guessed_word?(guess)
             return "You've already guessed this word!!"
         elsif guess.length == current_word.length 
-           if guess == current_word
-                return "You guessed the word!!"
-           else
-                self.wrong_guesses +=1
-                return false 
-           end
+           return make_whole_word_guess(current_word, guess)
         else 
             self.wrong_guesses +=1
             return false
         end
     end
+
+    def make_one_char_guess(current_word, guess)
+        if already_guessed_letter?(guess)
+            return "You've already guessed this letter!!"
+        end
+        if current_word.include?(guess)
+            current_word.length.times do |i|
+                if current_word[i] == guess
+                    self.word_so_far[i] = guess
+                end
+            end
+            if word_is_finished?
+                return "You guessed the word!!"
+            end
+            return true
+        else 
+            self.wrong_guesses +=1
+            return false
+        end
+    end
+
+    def make_whole_word_guess(current_word, guess)
+        if guess == current_word
+            return "You guessed the word!!"
+       else
+            self.wrong_guesses +=1
+            return false 
+       end
+    end
+        
 
     def already_guessed_letter?(guess)
         if self.guessed_letters.include?(guess)
@@ -116,7 +125,8 @@ class Game<ActiveRecord::Base
 
     def die 
         Word.destroy(self.words.last.id)
-        self.complete = true
+        # self.complete = true
+        #false
     end
 
     def self.leader_board
@@ -137,8 +147,6 @@ class Game<ActiveRecord::Base
     def return_revealed_word
         self.words.last
     end
-
-    ########HINT STUFF
 
     def get_hint(hint_type)
         self.hints_used += 1

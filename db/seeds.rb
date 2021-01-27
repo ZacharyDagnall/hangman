@@ -3,23 +3,21 @@ Game.destroy_all
 Player.destroy_all
 Word.destroy_all
 GameWord.destroy_all
-Hint.destroy_all
 
 Player.reset_pk_sequence
 Word.reset_pk_sequence
 GameWord.reset_pk_sequence
-Hint.reset_pk_sequence
 Game.reset_pk_sequence
 
 #	pick easy word
 Word.create(the_word: "spot",point_value: 8)
-Word.create(the_word:"area",point_value: 7)
+Word.create(the_word:"area",point_value: 9)
 Word.create(the_word:"cat",point_value: 6)
 Word.create(the_word:"park",point_value: 8)
 Word.create(the_word:"green",point_value: 8)
 Word.create(the_word:"hey",point_value: 6)
 Word.create(the_word:"easy",point_value: 5)
-Word.create(the_word:"yes",point_value: 7)
+Word.create(the_word:"yes",point_value: 8)
 Word.create(the_word:"red",point_value: 6)
 Word.create(the_word:"ball",point_value: 6)
 # pick medium word

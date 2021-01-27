@@ -24,12 +24,6 @@ ActiveRecord::Schema.define(version: 2021_01_25_201129) do
     t.integer "wrong_guesses"
   end
 
-  create_table "hints", force: :cascade do |t|
-    t.integer "word_id"
-    t.string "the_hint"
-    t.float "point_deduction"
-  end
-
   create_table "players", force: :cascade do |t|
     t.string "username"
   end

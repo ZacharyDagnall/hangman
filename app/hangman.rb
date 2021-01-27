@@ -1,7 +1,5 @@
 class Hangman
-    # here will be your CLI!
-    # it is not an AR class so you need to add attr
-  
+   
     attr_reader :prompt
 
     def initialize
@@ -13,6 +11,8 @@ class Hangman
       top_menu
       puts "Thanks for playing!"
     end
+
+    private 
 
     def top_menu
       continue = true
@@ -28,9 +28,9 @@ class Hangman
 
     def logged_in_menu(player)
       puts "Welcome #{player.username}!"
-      if player.open_game?
-        prompt.yes?("Continue last game?")
-      end
+      # if player.open_game?
+      #   prompt.yes?("Continue last game?")
+      # end
       continue=true
       while (continue)
         player.reload
@@ -50,7 +50,7 @@ class Hangman
     end
 
     def log_in
-      usrnm = prompt.ask("What is your username?").capitalize
+      usrnm = prompt.ask("What is your username?").to_s.capitalize
       player = Player.find_by(username: usrnm)
       if usrnm == "Exit"
         return 
@@ -63,10 +63,10 @@ class Hangman
     end
 
     def sign_up
-      usrnm = prompt.ask("What would you like your username to be?").capitalize
-      while (Player.find_by(username: usrnm) && usrnm != "Exit")
-        puts "This username is already taken!"
-        usrnm = prompt.ask("What would you like your username to be?").capitalize
+      usrnm = prompt.ask("What would you like your username to be?").to_s.capitalize
+      while ( (Player.find_by(username: usrnm) && usrnm != "Exit") || usrnm=="")
+        puts "This username is already taken or invalid!"
+        usrnm = prompt.ask("What would you like your username to be?").to_s.capitalize
       end
       if (usrnm != "Exit")
         player = Player.create(username: usrnm)
@@ -144,23 +144,23 @@ class Hangman
       guess = ""
       puts HangmanPictures.return_pic(game.wrong_guesses)
       while guess != "exit" && guess != "Exit"
-        hint_taken = false
+        hint_just_taken = false
         print_update(game, used_hints[:count])
         guess = prompt.ask("What is your guess?")
         if guess == "hint"
           used_hints = call_for_hint(game, used_hints)
-          hint_taken = true
+          hint_just_taken = true
         end
-        if !hint_taken && guess && guess.downcase != "exit" # && guess != "Exit" && guess
+        if !hint_just_taken && guess && guess.downcase != "exit" 
           result = game.make_guess(guess)
           we_out = print_appropriate_message_for_guess(game,result,used_hints[:count])
           return we_out if we_out.is_a?(TrueClass) || we_out.is_a?(FalseClass)
           puts HangmanPictures.return_pic(game.wrong_guesses)
         end
       end
+      game.die  #this means that the user typed "exit", and broke the loop, finished their game early. 
+      false
     end
-  
-    private
 
     def call_for_hint(game, used_hints)   ##can we use an enumerable?
       prompt.select("HINT OPTIONS:") do |menu|
@@ -249,46 +249,5 @@ class Hangman
       puts "Oof sorry, closer to death."
     end
   
-    
-  end
+end
 
-
-=begin
-  "Welcome to Zak and Sam's hangman"
-   * log in (using username)
-    ** type in username, check if it exists, if no, direct to sign up menu
-    *** if yes, take to logged-in menu
-   * view leaderboard
-   * sign up
-   * exit / close the program
-
-   * logged-in menu
-   *** instructions & rules 
-   *** view past scores
-   *** view your high score
-   *** view leaderboard
-   *** if(exists a incomplete game) continue?
-   *** new game
-   ******* if (exists incomplete game), close it
-   *** delete a score
-   *** delete all scores
-   *** update username
-   *** view number of games played
-   *** log-out
-   ******* take to top menu
-
-
-   * in-game
-   *** print the word_so_far string, and accept guesses
-   *** print guesses remaining
-   *** print hangman doodle
-   *** points available for guessing this word correct (and difficulty)
-   *** points earned so far in this game
-   *** reserved words: "pause" "exit"
-   ******* if (guess word correctly) --> get new word, back to top
-   ******** if (guess wrong) --> call "die" method, output score from this game, and print "die message"
-   ****************** want to play again? 
-   *********************** yes --> back to top of in-game
-   *********************** no --> take back to logged-in menu
-
-=end
