@@ -190,7 +190,7 @@ class Hangman
     def print_update(game,hints)
       game.print_concealed_word
       puts "This word is worth #{game.return_revealed_word.point_value - (2 * hints)} points."
-      puts "You have #{game.guesses_remaining} guesses remaining.\n\n"
+      puts "You have #{set_number_guessed_color(game.guesses_remaining.to_s)} guesses remaining.\n\n"
       puts "You have gussed the following letters so far: #{game.guessed_letters.split("").sort.join(" ")}"
     end
 
@@ -236,7 +236,7 @@ class Hangman
       pid = fork{ exec 'afplay', "./sounds/right_word_guess.mp3" }
       puts HangmanPictures.return_pic(-2)
       puts "\"#{game.return_revealed_word.the_word}\" was worth #{game.return_revealed_word.point_value - (2 * hints)} points."
-      puts "Your current score for this game is #{game.get_score + game.return_revealed_word.point_value} \n" 
+      puts "Your current score for this game is #{game.get_score} \n" 
       prompt.ask("Press enter to go to the next word!")
       return true
     end
@@ -249,6 +249,23 @@ class Hangman
     def wrong_letter_guess
       pid = fork{ exec 'afplay', "./sounds/wrong_letter_guess.mp3" }
       puts "Oof sorry, closer to death."
+    end
+
+    def set_number_guessed_color(current_guess_num)
+      case current_guess_num
+      when "10","9"
+        return current_guess_num.colorize(:light_green)
+      when "8","7"
+        return current_guess_num.colorize(:green)
+      when "6","5"
+        return current_guess_num.colorize(:light_yellow)
+      when "4","3"
+        return current_guess_num.colorize(:yellow)
+      when "2" 
+        return current_guess_num.colorize(:light_red)
+      when "1"
+        return current_guess_num.colorize(:red)
+      end
     end
   
 end
