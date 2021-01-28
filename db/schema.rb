@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_25_201129) do
+ActiveRecord::Schema.define(version: 2021_01_28_155642) do
 
   create_table "game_words", force: :cascade do |t|
     t.integer "game_id"
@@ -19,9 +19,7 @@ ActiveRecord::Schema.define(version: 2021_01_25_201129) do
 
   create_table "games", force: :cascade do |t|
     t.integer "player_id"
-    t.boolean "complete"
-    t.string "word_so_far"
-    t.integer "wrong_guesses"
+    t.integer "hints_used", default: 0
   end
 
   create_table "players", force: :cascade do |t|

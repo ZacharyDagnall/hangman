@@ -4,8 +4,8 @@ class Game<ActiveRecord::Base
     has_many :game_words
     has_many :words, through: :game_words
 
-    after_initialize :set_initial_values
-    attr_accessor :wrong_guesses, :word_so_far, :guessed_letters, :complete, :guessed_words, :hints_used
+    #after_initialize :set_initial_values
+    attr_reader :wrong_guesses, :word_so_far, :guessed_letters, :complete, :guessed_words
 
     @@MAX_WRONGS = 10
 
@@ -42,16 +42,15 @@ class Game<ActiveRecord::Base
     end
 
     def self.concealed_word(word)
-        word_size = word.length
         concealed_word_str = ""
-        word_size.times do
+        word.length.times do
             concealed_word_str += "_"
         end
         return concealed_word_str
     end
 
     def word_is_finished?
-       !self.word_so_far.include?("_")
+       !@word_so_far.include?("_")
     end
 
     def make_guess(guess)
@@ -66,7 +65,7 @@ class Game<ActiveRecord::Base
         elsif guess.length == current_word.length 
            return make_whole_word_guess(current_word, guess)
         else 
-            self.wrong_guesses +=1
+            @wrong_guesses +=1
             return false
         end
     end
@@ -78,7 +77,7 @@ class Game<ActiveRecord::Base
         if current_word.include?(guess)
             current_word.length.times do |i|
                 if current_word[i] == guess
-                    self.word_so_far[i] = guess
+                    @word_so_far[i] = guess
                 end
             end
             if word_is_finished?
@@ -86,7 +85,7 @@ class Game<ActiveRecord::Base
             end
             return true
         else 
-            self.wrong_guesses +=1
+            @wrong_guesses +=1
             return false
         end
     end
@@ -95,32 +94,32 @@ class Game<ActiveRecord::Base
         if guess == current_word
             return "You guessed the word!!"
        else
-            self.wrong_guesses +=1
+            @wrong_guesses +=1
             return false 
        end
     end
         
 
     def already_guessed_letter?(guess)
-        if self.guessed_letters.include?(guess)
+        if @guessed_letters.include?(guess)
             true
         else
-            self.guessed_letters+=guess
+            @guessed_letters+=guess
             false
         end
     end
 
     def already_guessed_word?(guess)
-        if self.guessed_words.include?(guess)
+        if @guessed_words.include?(guess)
             true
         else
-            self.guessed_words.push(guess)
+            @guessed_words.push(guess)
             false
         end
     end
 
     def guesses_remaining
-        @@MAX_WRONGS-self.wrong_guesses
+        @@MAX_WRONGS - @wrong_guesses
     end
 
     def die 
@@ -141,7 +140,7 @@ class Game<ActiveRecord::Base
     end 
 
     def print_concealed_word
-       puts word_so_far.split('').join(" ")
+       puts @word_so_far.split('').join(" ")
     end
 
     def return_revealed_word
@@ -166,6 +165,9 @@ class Game<ActiveRecord::Base
         the_word = self.words.last.the_word
         vowels_arr = %w(a,e,i,o,u)
         num = vowels_arr.sum{|letter| the_word.count(letter)}
+        if num == 0
+            return "There are no 'A's, 'E's, 'I's, 'O's, or 'U's! Surely you must be asking 'Y'?"
+        end
         "#{num} of these letters #{is_or_are(num)} #{plural_or_not(num, "vowel")}."
     end
 
@@ -212,8 +214,8 @@ class Game<ActiveRecord::Base
     end
 
     def set_initial_values
-        self.complete = false
-        @hints_used = 0.0
+        #self.complete = false
+        self.hints_used = 0
     end
 
 end

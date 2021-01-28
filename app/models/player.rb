@@ -14,7 +14,7 @@ class Player<ActiveRecord::Base
         if !goodbye_game
             return false
         else
-            Game.destroy(goodbye_game.id) ##so this will return a "truthy" value i believe
+            Game.destroy(goodbye_game.id) 
         end
 
     end
