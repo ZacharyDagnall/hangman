@@ -5,7 +5,7 @@ class Game<ActiveRecord::Base
     has_many :words, through: :game_words
 
     #after_initialize :set_initial_values
-    attr_reader :wrong_guesses, :word_so_far, :guessed_letters, :complete, :guessed_words
+    attr_reader :wrong_guesses, :word_so_far, :guessed_letters, :guessed_words
 
     @@MAX_WRONGS = 10
 
@@ -13,11 +13,7 @@ class Game<ActiveRecord::Base
         if self.words.length==0
             return 0
         end
-        #if !self.complete
         self.words.sum{|word| word.point_value} - (self.hints_used * 2)
-        #else 
-        #    self.words.sum{|word| word.point_value}
-        #end
     end
 
     def get_word
@@ -124,8 +120,6 @@ class Game<ActiveRecord::Base
 
     def die 
         Word.destroy(self.words.last.id)
-        # self.complete = true
-        #false
     end
 
     def self.leader_board
@@ -213,8 +207,8 @@ class Game<ActiveRecord::Base
         end
     end
 
+    #unused (and uncalled), because we set the default value in the  active record table instead.
     def set_initial_values
-        #self.complete = false
         self.hints_used = 0
     end
 
