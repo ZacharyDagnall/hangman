@@ -16,7 +16,6 @@ class Player<ActiveRecord::Base
         else
             Game.destroy(goodbye_game.id) 
         end
-
     end
 
     def delete_all_scores
@@ -33,9 +32,5 @@ class Player<ActiveRecord::Base
         end
         self.games.map{|game|game.get_score}.sort.reverse.join("\n") + "\n\n"
     end
-
-    def open_game?
-        self.games.any?{|game| game.complete=false}
-    end
-
+    
 end
