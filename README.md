@@ -27,3 +27,5 @@ Then the Hangman.rb file adds all of the actual interaction features. Here, you 
 Some future developments could be:
   * to allow a player to continue a game that they exited from and didn't die in yet.
   * to award bonus points for guessing a whole word "early" (while there is more than one letter left)
+  * add more words
+  * have words calculate their own point value based on pre-set criteria for assessing their own difficulty
